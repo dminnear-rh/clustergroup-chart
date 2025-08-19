@@ -621,6 +621,44 @@
             "$ref": "#/definitions/ArgoCDResourceHealthChecks"
           },
           "description": "ResourceHealthChecks customizes resource health check behavior."
+        },
+        "controller": {
+          "type": "object",
+          "properties": {
+            "resources": {
+              "type": "object",
+              "description": "Resources for the ArgoCD controller"
+            }
+          }
+        },
+        "kustomizeBuildOptions": {
+          "type": "string",
+          "description": "KustomizeBuildOptions is used to pass additional options to the kustomize build command"
+        },
+        "repo": {
+          "type": "object",
+          "properties": {
+            "resources": {
+              "type": "object",
+              "description": "Resources for the ArgoCD repo"
+            },
+            "extraVolumeMounts": {
+              "type": "array",
+              "description": "Extra volume mounts for the ArgoCD repo"
+            },
+            "extraVolumes": {
+              "type": "array",
+              "description": "Extra volumes for the ArgoCD repo"
+            },
+            "extraInitContainers": {
+              "type": "array",
+              "description": "Extra init containers for the ArgoCD repo"
+            },
+            "env": {
+              "type": "array",
+              "description": "Extra environment variables for the ArgoCD repo"
+            }
+          }
         }
       }
     },

@@ -177,12 +177,10 @@ spec:
   controller:
     processors: {}
     resources:
-      limits:
-        cpu: "4"
-        memory: 4Gi
-      requests:
-        cpu: 500m
-        memory: 2Gi
+      {{- toYaml $.Values.clusterGroup.argoCD.controller.resources | nindent 6 }}
+  {{- with $.Values.clusterGroup.argoCD.kustomizeBuildOptions }}
+  kustomizeBuildOptions: {{ . }}
+  {{- end }}
   sso:
     provider: dex
     dex:
@@ -220,16 +218,17 @@ spec:
         name: trusted-hub-bundle
       - mountPath: /tmp/ca-bundles
         name: ca-bundles
+    {{- with $.Values.clusterGroup.argoCD.repo.extraInitContainers }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
     resources:
-      limits:
-        cpu: "1"
-        memory: 1Gi
-      requests:
-        cpu: 250m
-        memory: 256Mi
+      {{- toYaml $.Values.clusterGroup.argoCD.repo.resources | nindent 6 }}
     volumeMounts:
     - mountPath: /etc/pki/tls/certs
       name: ca-bundles
+    {{- with $.Values.clusterGroup.argoCD.repo.extraVolumeMounts }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
     volumes:
     - configMap:
         name: kube-root-ca.crt
@@ -244,6 +243,13 @@ spec:
       name: trusted-hub-bundle
     - emptyDir: {}
       name: ca-bundles
+    {{- with $.Values.clusterGroup.argoCD.repo.extraVolumes }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    {{- with $.Values.clusterGroup.argoCD.repo.env }}
+    env:
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
 {{- if len $.Values.clusterGroup.argoCD.initContainers }}
 {{ $.Values.clusterGroup.argoCD.initContainers | toPrettyJson }}
 {{- end }}
