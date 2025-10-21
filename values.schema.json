@@ -249,8 +249,18 @@
           "deprecated": true
         },
         "syncPolicy": {
-          "type": "string",
-          "description": "This is the sync policy for the ArgoCD applications. When set to Automatic ArgoCD will automatically sync an application when it detects differences between the desired manifests in Git."
+          "oneOf": [
+            {
+              "type": "string",
+              "enum": ["Manual", "Automatic"],
+              "description": "String value for sync policy: 'Manual' or 'Automatic'"
+            },
+            {
+              "type": "object",
+              "description": "Custom sync policy object passed directly to ArgoCD"
+            }
+          ],
+          "description": "This is the sync policy for the ArgoCD applications. When set to 'Manual', no syncPolicy object will be set. When set to 'Automatic', syncPolicy will be set to {automated: {}, retry: { limit: global.options.applicationRetryLimit }}. When set to an object, it will be passed directly to the syncPolicy field of the application."
         },
         "installPlanApproval": {
           "type": "string",
