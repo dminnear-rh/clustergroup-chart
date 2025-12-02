@@ -32,6 +32,10 @@ Default always defined top-level variables for helm charts
   value: {{ $.Values.global.privateRepo | quote }}
 - name: global.experimentalCapabilities
   value: {{ $.Values.global.experimentalCapabilities | default "" }}
+{{- if $.Values.global.deletionPhase }}
+- name: global.deletionPhase
+  value: {{ $.Values.global.deletionPhase }}
+{{- end }} {{/* if $.Values.global.deletionPhase */}}
 {{- end }} {{/* clustergroup.globalvaluesparameters */}}
 
 
@@ -107,9 +111,9 @@ Default always defined valueFiles to be included in Applications but with a pref
 {{- end }} {{/* if $.Values.global.extraValueFiles */}}
 {{- end }} {{/* clustergroup.app.globalvalues.prefixedvaluefiles */}}
 
-{{/* 
+{{/*
 Helper function to generate AppProject from a map object
-Called from common/clustergroup/templates/plumbing/projects.yaml 
+Called from common/clustergroup/templates/plumbing/projects.yaml
 */}}
 {{- define "clustergroup.template.plumbing.projects.map" -}}
 {{- $projects := index . 0 }}
@@ -143,9 +147,9 @@ status: {}
 {{- end }}
 {{- end }}
 
-{{/* 
+{{/*
   Helper function to generate AppProject from a list object.
-  Called from common/clustergroup/templates/plumbing/projects.yaml 
+  Called from common/clustergroup/templates/plumbing/projects.yaml
 */}}
 {{- define "clustergroup.template.plumbing.projects.list" -}}
 {{- $projects := index . 0 }}
@@ -178,13 +182,13 @@ status: {}
 {{- end }}
 {{- end }}
 
-{{/* 
+{{/*
   Helper function to generate Namespaces from a map object.
   Arguments passed as a list object are:
   0 - The namespace hash keys
   1 - Pattern name from .Values.global.pattern
   2 - Cluster group name from .Values.clusterGroup.name
-  Called from common/clustergroup/templates/core/namespaces.yaml 
+  Called from common/clustergroup/templates/core/namespaces.yaml
 */}}
 {{- define "clustergroup.template.core.namespaces.map" -}}
 {{- $ns := index . 0 }}
@@ -216,7 +220,7 @@ spec:
 {{- end }}{{- /* range $k, $v := $ns */}}
 {{- end }}
 
-{{- /* 
+{{- /*
   Helper function to generate OperatorGroup from a map object.
   Arguments passed as a list object are:
   0 - The namespace hash keys
